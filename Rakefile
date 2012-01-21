@@ -1,9 +1,12 @@
 # Rakefile
 
+require 'time'
+
 deploy_default = "heroku"
 deploy_branch = "master"
 deploy_dir = "_heroku"
 public_dir = '_site'
+jekyll_path = '~/Workspace/jekyll/bin/jekyll'
 
 
 desc "deploy basic rack app to heroku"
@@ -22,4 +25,31 @@ multitask :heroku do
     system "git push heroku #{deploy_branch}"
     puts "\n## Heroku deploy complete"
   end
+end
+
+desc 'Generate Layout'
+task :new_post do
+  t = Time.now
+  d = '_posts/' + t.strftime('%Y-%m-%d') + '.md'
+  l = t.strftime('%d %B %Y')
+  puts 'Generating new post'
+  layout = <<DOC
+---
+layout: post
+title: Title
+---
+
+{{ page.title }}
+================
+
+DOC
+  layout += "\n <p class='meta'>" + l + "</p>\n"
+  File.open(d, 'w') do |f|
+    f.puts layout
+  end
+  puts 'Created: ' + d
+end
+
+task :jekyll do
+  system jekyll_path + ' --auto --server'
 end
