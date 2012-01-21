@@ -6,8 +6,9 @@ deploy_default = "heroku"
 deploy_branch = "master"
 deploy_dir = "_heroku"
 public_dir = '_site'
+github_dir = '_github'
 jekyll_path = '~/Workspace/jekyll/bin/jekyll'
-
+app_name = 'gentle-galaxy-3818.heroku.com'
 
 desc "deploy basic rack app to heroku"
 multitask :heroku do
@@ -26,7 +27,22 @@ multitask :heroku do
     puts "\n## Heroku deploy complete"
   end
 end
-
+multitask :github do
+    puts "## Deploying to Github "
+    (Dir["#{github_dir}/public/*"]).each { |f| rm_rf(f) }
+    system "cp -R #{public_dir}/* #{github_dir}/"
+    puts "\n## copying #{public_dir} to #{github_dir}/"
+    cd "#{github_dir}" do
+      system "git add ."
+      system "git add -u"
+      puts "\n## Committing: Site updated at #{Time.now.utc}"
+      message = "Site updated at #{Time.now.utc}"
+      system "git commit -m '#{message}'"
+      puts "\n## Pushing generated #{github_dir} website"
+      system "git push origin #{deploy_branch}"
+      puts "\n## Github deploy complete"
+    end
+  end
 desc 'Generate Layout'
 task :new_post do
   t = Time.now
@@ -48,6 +64,10 @@ DOC
     f.puts layout
   end
   puts 'Created: ' + d
+end
+
+task :launch do
+  system 'open http://' + app_name
 end
 
 task :jekyll do
