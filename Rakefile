@@ -27,6 +27,7 @@ multitask :heroku do
     puts "\n## Heroku deploy complete"
   end
 end
+
 multitask :github do
     puts "## Deploying to Github "
     (Dir["#{github_dir}/public/*"]).each { |f| rm_rf(f) }
