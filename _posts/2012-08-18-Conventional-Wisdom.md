@@ -2,10 +2,9 @@
 layout: default
 title: Conventional Wisdom
 ---
-<div align='center'><h1>Nerd Spot</h1></div>
 
-Conventional Wisdom
----
+{{ page.title }}
+================
 
 This new project that I'm starting is going to decimate conventional wisdom. The goal of this project is to provide real data, real models and a mathematical interpretation to the data that is available to everyone. 
 
